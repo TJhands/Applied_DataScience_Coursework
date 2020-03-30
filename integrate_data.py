@@ -127,6 +127,10 @@ def store_dwellings_england_quarter():
             df.area_code.iloc[1] = 'E92000001'
             df.drop(0, axis = 0, inplace = True)
             df = df.dropna(subset = ['area_code']).reset_index(drop = True)
+            df['new_dwelling_start'] = df.PrivateEnterprise_start+ df.HousingAssociations_start + df.LocalAuthority_start
+            df['new_dwelling_complete'] = df.PrivateEnterprise_complete+ df.HousingAssociations_complete + df.LocalAuthority_complete
+            df = df.drop(['PrivateEnterprise_start', 'HousingAssociations_start', 'LocalAuthority_start', 'PrivateEnterprise_complete', 'HousingAssociations_complete', 'LocalAuthority_complete'],axis = 1)
+
             df = df.set_index('area_code').stack().reset_index()
             df.rename({'level_1':'feature_name',0:'feature_value'},axis = 1,inplace = True)
             df.set_index('area_code',inplace = True)
