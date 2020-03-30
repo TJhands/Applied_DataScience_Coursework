@@ -100,6 +100,45 @@ def store_hpi_sales():
             to_sql("features", ENGINE_ADS, result_sales, type="update", chunksize=2000)
     return
 
+def store_dwellings_england_quarter():
+    """
+    store number of dwellings started and completed in a period of time.
+    Three tenures :("PrivateEnterprise","Housing Associations","LocalAuthority" )
+    :return:
+    """
+    sql = sqlpkg.get_area_code()
+    area_code = pd.read_sql(sql, ENGINE_ADS, index_col='area_code')
+    for year in range(2005,2020):
+        for quarter in range(1,5):
+            df = pd.read_excel("../data/new_dwelling/LiveTable253a.xlsx", sheet_name=f"{year} Q{quarter}")
+            if year < 2014 or (year == 2014 and quarter == 1):
+                # 2005 Q1 - 2014 Q1
+                df = df.iloc[:, [3, 7, 8, 9, 12, 13, 14]]
+            elif year == 2015 or year == 2016 or (year == 2017 and quarter == 1):
+                # 2015 Q1 - 2017 Q1
+                df = df.iloc[:, [4, 9, 10, 11, 14, 15, 16]]
+            else:
+                # 2014 Q2 - 2014 Q4
+                df = df.iloc[:, [4, 8, 9, 10, 13, 14, 15]]
+                # 2017 Q2 - 2019 Q4
+                # df = df.iloc[:, [4, 8, 9, 10, 13, 14, 15]]
+            df.columns = ["area_code", 'PrivateEnterprise_start', 'HousingAssociations_start', 'LocalAuthority_start', 'PrivateEnterprise_complete', 'HousingAssociations_complete', 'LocalAuthority_complete']
+            df = df.dropna(subset = ['PrivateEnterprise_start', 'HousingAssociations_start', 'LocalAuthority_start', 'PrivateEnterprise_complete', 'HousingAssociations_complete', 'LocalAuthority_complete']).reset_index(drop = True)
+            df.area_code.iloc[1] = 'E92000001'
+            df.drop(0, axis = 0, inplace = True)
+            df = df.dropna(subset = ['area_code']).reset_index(drop = True)
+            df = df.set_index('area_code').stack().reset_index()
+            df.rename({'level_1':'feature_name',0:'feature_value'},axis = 1,inplace = True)
+            df.set_index('area_code',inplace = True)
+            result = area_code.join(df).drop('area_name', axis=1)
+            result['quarter'] = f'Q{quarter}'
+            result['year'] = f'{year}'
+            result = result.dropna(subset=['feature_name']).reset_index()
+            to_sql("features", ENGINE_ADS, result, type="update", chunksize=2000)
+            print(f"{year},Q{quarter},success")
+            # df = df.groupby(['area_code','year','quarter','feature_name'])['feature_value'].last().unstack(level=3).reset_index()
+            # df.to_csv("./data/homeless_england.csv", index=False)
+    return
 def get_feature_data():
     """
     get features and transfer the format to csv (Axial rotation)
@@ -111,4 +150,4 @@ def get_feature_data():
         level=3).reset_index()
     return
 if __name__ == '__main__':
-    store_homelessness_england()
+    store_dwellings_england_quarter()
