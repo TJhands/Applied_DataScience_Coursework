@@ -118,7 +118,7 @@ def store_dwellings_england_quarter():
                 # 2015 Q1 - 2017 Q1
                 df = df.iloc[:, [4, 9, 10, 11, 14, 15, 16]]
             else:
-                # 2014 Q2 - 2014 Q4
+                # 2014 Q2 - 2014 Q4     ~
                 df = df.iloc[:, [4, 8, 9, 10, 13, 14, 15]]
                 # 2017 Q2 - 2019 Q4
                 # df = df.iloc[:, [4, 8, 9, 10, 13, 14, 15]]
