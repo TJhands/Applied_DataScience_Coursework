@@ -7,13 +7,6 @@ from tosql import to_sql
 import sqlpkg
 import arrow
 
-from sklearn.linear_model import BayesianRidge, LinearRegression, ElasticNet
-from sklearn.svm import SVR
-from sklearn.ensemble.gradient_boosting import GradientBoostingRegressor  # 集成算法
-from sklearn.model_selection import cross_val_score  # 交叉验证
-from sklearn.metrics import explained_variance_score, mean_absolute_error, mean_squared_error, r2_score
-import seaborn as sns
-
 import matplotlib.pyplot as plt
 from sklearn import linear_model
 
