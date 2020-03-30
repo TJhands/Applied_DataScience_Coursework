@@ -142,7 +142,7 @@ def store_dwellings_england_quarter():
             print(f"{year},Q{quarter},success")
             # df = df.groupby(['area_code','year','quarter','feature_name'])['feature_value'].last().unstack(level=3).reset_index()
             # df.to_csv("./data/homeless_england.csv", index=False)
-    return
+    return  df
 def get_feature_data():
     """
     get features and transfer the format to csv (Axial rotation)
