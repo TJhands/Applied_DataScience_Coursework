@@ -98,7 +98,7 @@ def store_hpi_sales():
             result_sales = result_sales.rename({'Sales_Volume': 'feature_value'},axis = 1).reset_index()
             to_sql("features", ENGINE_ADS, result, type="update", chunksize=2000)
             to_sql("features", ENGINE_ADS, result_sales, type="update", chunksize=2000)
-    return
+    return result_sales
 
 def store_dwellings_england_quarter():
     """
