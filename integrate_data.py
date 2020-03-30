@@ -152,6 +152,6 @@ def get_feature_data():
     features = pd.read_sql(sql, ENGINE_ADS)
     features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
         level=3).reset_index()
-    return
+    return features
 if __name__ == '__main__':
-    store_dwellings_england_quarter()
+    get_feature_data()
