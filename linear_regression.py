@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+from pandas import read_csv
+
 import db_config
 from tosql import to_sql
 import sqlpkg
@@ -7,7 +9,12 @@ import arrow
 
 import matplotlib.pyplot as plt
 from sklearn import linear_model
+
 ENGINE_ADS = db_config.ENGINE_ADS_COURSEWORK
+
+data = read_csv(
+    'D:\ADS\LiveTable.csv', encoding='GBK'
+)
 
 X_train = np.c_[.5, 1].T
 y_train = [.5, 1]
