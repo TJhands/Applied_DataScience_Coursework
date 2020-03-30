@@ -1,13 +1,27 @@
 import pandas as pd
 import numpy as np
+from pandas import read_csv
+
 import db_config
 from tosql import to_sql
 import sqlpkg
 import arrow
 
+from sklearn.linear_model import BayesianRidge, LinearRegression, ElasticNet
+from sklearn.svm import SVR
+from sklearn.ensemble.gradient_boosting import GradientBoostingRegressor  # 集成算法
+from sklearn.model_selection import cross_val_score  # 交叉验证
+from sklearn.metrics import explained_variance_score, mean_absolute_error, mean_squared_error, r2_score
+import seaborn as sns
+
 import matplotlib.pyplot as plt
 from sklearn import linear_model
+
 ENGINE_ADS = db_config.ENGINE_ADS_COURSEWORK
+
+data = read_csv(
+    'D:\ADS\LiveTable.csv', encoding='GBK'
+)
 
 X_train = np.c_[.5, 1].T
 y_train = [.5, 1]
