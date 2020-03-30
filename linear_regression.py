@@ -12,10 +12,6 @@ from sklearn import linear_model
 
 ENGINE_ADS = db_config.ENGINE_ADS_COURSEWORK
 
-data = read_csv(
-    'D:\ADS\LiveTable.csv', encoding='GBK'
-)
-
 X_train = np.c_[.5, 1].T
 y_train = [.5, 1]
 X_test = np.c_[0, 2].T
