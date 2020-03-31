@@ -143,6 +143,31 @@ def store_dwellings_england_quarter():
             # df = df.groupby(['area_code','year','quarter','feature_name'])['feature_value'].last().unstack(level=3).reset_index()
             # df.to_csv("./data/homeless_england.csv", index=False)
     return  df
+
+def store_total_dwelling_supply():
+    """
+    store total dwelling provided by local authority
+    :return:
+    """
+    sql = sqlpkg.get_area_code()
+    area_code = pd.read_sql(sql, ENGINE_ADS, index_col='area_code')
+    df = pd.read_excel("../data/Live_Tables_1006-1009.xlsx", sheet_name='Live Table 1008C')
+    df_l = df.iloc[:, [1]]
+    df_r = df.iloc[:, 17:31]
+    df = df_l.join(df_r)
+    df.columns = df.iloc[2].apply(lambda x:x[0:4])
+    df = df.rename({"Curr":'area_code'},axis = 1).dropna().reset_index(drop = True)
+    df = df.drop(0,axis = 0).replace("..",'None').set_index('area_code')
+    df = df.stack().reset_index()
+    df.rename({2: 'year', 0: 'feature_value'}, axis=1, inplace=True)
+    df = df.set_index('area_code')
+    result = area_code.join(df).drop('area_name', axis=1)
+    result['quarter'] = 'year'
+    result['feature_name'] = 'total_affordable_dwelling_supply'
+    result = result.reset_index()
+    result.dropna(subset=['area_code','year','feature_name','quarter'],inplace = True)
+    to_sql("features", ENGINE_ADS, result, type="update", chunksize=2000)
+    return
 def get_feature_data():
     """
     get features and transfer the format to csv (Axial rotation)
@@ -152,6 +177,9 @@ def get_feature_data():
     features = pd.read_sql(sql, ENGINE_ADS)
     features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
         level=3).reset_index()
+    features = features[['area_code','year','quarter','new_dwelling_start','new_dwelling_complete','homelessness','hpi','sales_volume']]
+    features = features.dropna().reset_index(drop = True)
     return features
 if __name__ == '__main__':
     get_feature_data()
+    #1,17-30
