@@ -15,14 +15,18 @@ features = pd.read_sql(sql, ENGINE_ADS)
 features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
         level=3).reset_index()
 features.dropna()
-# features=features[~features['homelessness'].isin([0])]
 
-features=features[features["sales_volume"]>1200]
+
+filter_homeless=104.5
+filter_sales_volume=554.72
+# features=features[~features['homelessness'].isin([0])]
+features=features[features["sales_volume"]<554.72]
 #features=features[features["homelessness"]>5000]
+#features=features[features["homelessness"]<104.5]
 
 x=features["homelessness"]
 #x=features["hpi"]
-x=features["sales_volume"]
+#x=features["sales_volume"]
 print(features.describe())
 h=x.hist(bins=100)
 plt.show()
