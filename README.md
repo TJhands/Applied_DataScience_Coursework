@@ -14,3 +14,9 @@
  
  >https://www.gov.uk/government/statistical-data-sets/live-tables-on-affordable-housing-supply
 >>Total affordable dwelling supply 
+ 
+ draw_multi可以回归
+ 改变和添加X:
+#y=homelessness
+#x=sales_volume+hpi
+fit = smf.ols('homelessness~sales_volume+hpi', data = Train).fit()
