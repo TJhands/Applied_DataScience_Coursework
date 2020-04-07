@@ -180,6 +180,22 @@ def get_feature_data():
     features = features[['area_code','year','quarter','new_dwelling_start','new_dwelling_complete','homelessness','hpi','sales_volume']]
     features = features.dropna().reset_index(drop = True)
     return features
+
+def fill_missing_data():
+    """
+       get features and transfer the format to csv (Axial rotation)
+       :return:
+       """
+    sql = sqlpkg.get_features()
+    features = pd.read_sql(sql, ENGINE_ADS)
+    features = features.fillna('NULL')
+    features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
+        level=3).reset_index()
+    features = features[
+        ['area_code', 'year', 'quarter', 'new_dwelling_start', 'new_dwelling_complete', 'homelessness', 'hpi',
+         'sales_volume']]
+    features = features.dropna().reset_index(drop = True)
+    return
 if __name__ == '__main__':
-    get_feature_data()
+    fill_missing_data()
     #1,17-30
