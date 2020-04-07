@@ -45,5 +45,18 @@ print(fit.summary())
 # h=x.hist(bins=100)
 # plt.show()
 
-sns.pairplot(df)
+# sns.pairplot(df)
 #plt.show()
+
+cm = np.corrcoef(df.values.T)
+sns.set(font_scale=1.5)
+hm = sns.heatmap(cm,
+                 cbar=True,
+                 annot=True,
+                 square=True,
+                 fmt='.2f',
+                 annot_kws={'size':15},
+                 yticklabels=df.columns,
+                 xticklabels=df.columns)
+plt.show()
+
