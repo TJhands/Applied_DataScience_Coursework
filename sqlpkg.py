@@ -8,3 +8,6 @@ def get_features():
 def get_homelessness():
     sql = "select * from features where feature_name = 'homelessness'"
     return sql
+def get_area_code2():
+    sql = "select * from areacode where area_code != '-' and area_code != 'E92000001' and area_code like 'E%%'"
+    return sql
