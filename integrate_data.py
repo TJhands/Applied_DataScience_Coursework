@@ -195,7 +195,8 @@ def fill_missing_data():
         ['area_code', 'year', 'quarter', 'new_dwelling_start', 'new_dwelling_complete', 'homelessness', 'hpi',
          'sales_volume']]
     features = features.dropna().reset_index(drop = True)
-    return
+
+    return features
 if __name__ == '__main__':
-    fill_missing_data()
+    get_feature_data()
     #1,17-30
