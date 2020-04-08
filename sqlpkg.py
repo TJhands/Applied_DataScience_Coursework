@@ -23,3 +23,6 @@ def get_features_except_hpi():
 def get_total_households():
     sql = "select `area_code`,`year`,`value` from households where area_code like 'E%%' and age_group = 'all'"
     return sql
+def get_features_hpi():
+    sql = "select `area_code`,`year`,`quarter`,`feature_name`,`feature_value` from features where area_code like 'E%%' and feature_name = 'hpi'"
+    return sql

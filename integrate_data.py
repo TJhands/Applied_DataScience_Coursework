@@ -253,14 +253,18 @@ def nomalise_features():
     2011-2019 annual
     :return:
     """
-    sql1 = sqlpkg.get_features_except_hpi()
-    sql2 = sqlpkg.get_total_households()
-    features = pd.read_sql(sql1,ENGINE_ADS,index_col=['area_code','year'])
-    households = pd.read_sql(sql2, ENGINE_ADS, index_col=['area_code', 'year'])
-    result = features.join(households).dropna()
-    result['feature_value_normalised'] = result.feature_value / result.value
-    result = result.reset_index().drop('value',axis = 1)
-    to_sql('features',ENGINE_ADS,result)
+    # sql1 = sqlpkg.get_features_except_hpi()
+    # sql2 = sqlpkg.get_total_households()
+    # features = pd.read_sql(sql1,ENGINE_ADS,index_col=['area_code','year'])
+    # households = pd.read_sql(sql2, ENGINE_ADS, index_col=['area_code', 'year'])
+    # result = features.join(households).dropna()
+    # result['feature_value_normalised'] = result.feature_value / result.value
+    # result = result.reset_index().drop('value',axis = 1)
+    # to_sql('features',ENGINE_ADS,result)
+    sql = sqlpkg.get_features_hpi()
+    hpi = pd.read_sql(sql,ENGINE_ADS)
+    hpi['feature_value_normalised'] = hpi.feature_value
+    to_sql('features', ENGINE_ADS, hpi)
     return
 
 if __name__ == '__main__':
