@@ -23,10 +23,11 @@ features=get_feature_data()
 print(features.describe())
 # features=features[features["homelessness"]<104.5]
 
-df=features
+# df=features
 df= features[['homelessness','new_dwelling_start','new_dwelling_complete','hpi','sales_volume']]
 # print(features.columns)
-homeless =features["homelessness"]
+df.columns = ['hl','nds','ndc','hpi','sv']
+homeless =df["hl"]
 coo= df.corrwith(homeless)
 print(coo)
 
@@ -37,11 +38,11 @@ Train,Test = train_test_split(df, train_size = 0.8, random_state=1234)
 #y=homelessness
 #x=sales_volume+hpi
 
-fit = smf.ols('homelessness~sales_volume+hpi+hpi+new_dwelling_start+new_dwelling_complete', data = Train).fit()
+fit = smf.ols('hl~sv+hpi+hpi+nds+ndc', data = Train).fit()
 print(fit.summary())
 
 pred = fit.predict(exog = Test)
-RMSE = np.sqrt(mean_squared_error(Test.homelessness, pred))
+RMSE = np.sqrt(mean_squared_error(Test.hl, pred))
 # x=features["homelessness"]
 # h=x.hist(bins=100)
 # plt.show()
@@ -50,7 +51,7 @@ plt.style.use('ggplot')
 # 设置中文编码和负号的正常显示
 plt.rcParams['font.sans-serif'] = 'Microsoft YaHei'
 
-plt.scatter(Test.homelessness, pred)
+plt.scatter(Test.hl, pred)
 # 回归线
 # plt.plot([Test.homelessness.min(), Test.homelessness.max()], [pred.min(), pred.max()], 'r--', lw=2, label = '拟合线')
 
@@ -66,4 +67,5 @@ plt.tick_params(top = 'off', right = 'off')
 plt.savefig('./result.png')
 plt.show()
 sns.pairplot(df)
+plt.savefig('./result1.png')
 plt.show()
