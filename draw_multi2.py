@@ -56,7 +56,7 @@ hm = sns.heatmap(cm,
                  square=True,
                  fmt='.2f',
                  annot_kws={'size':15},
-                 yticklabels=df.columns,
-                 xticklabels=df.columns)
+                 yticklabels=['homelessness','nds','ndc','hpi','sv'],
+                 xticklabels=['homelessness','nds','ndc','hpi','sv'])
 plt.show()
 
