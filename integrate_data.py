@@ -179,7 +179,11 @@ def get_feature_data():
         level=3).reset_index()
     features = features[['area_code','year','quarter','new_dwelling_start','new_dwelling_complete','homelessness','hpi','sales_volume']]
     features = features.dropna().reset_index(drop = True)
-
+    features.new_dwelling_start = features.new_dwelling_start / max(features.new_dwelling_start)
+    features.new_dwelling_complete = features.new_dwelling_complete / max(features.new_dwelling_complete)
+    features.homelessness = features.homelessness / max(features.homelessness)
+    features.hpi = features.hpi / max(features.hpi)
+    features.sales_volume = features.sales_volume / max(features.sales_volume)
     return features
 
 def fill_missing_data():
@@ -268,5 +272,5 @@ def nomalise_features():
     return
 
 if __name__ == '__main__':
-    nomalise_features()
+    get_feature_data()
     #1,17-30
