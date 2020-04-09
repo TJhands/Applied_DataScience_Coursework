@@ -10,7 +10,7 @@ import matplotlib
 from  integrate_data import get_feature_data
 ENGINE_ADS = db_config.ENGINE_ADS_COURSEWORK
 
-sql = sqlpkg.get_features()
+sql = sqlpkg.get_features_nomalised()
 features = pd.read_sql(sql, ENGINE_ADS)
 features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
         level=3).reset_index()

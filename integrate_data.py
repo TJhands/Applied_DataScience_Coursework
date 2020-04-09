@@ -173,12 +173,13 @@ def get_feature_data():
     get features and transfer the format to csv (Axial rotation)
     :return:
     """
-    sql = sqlpkg.get_features()
+    sql = sqlpkg.get_features_nomalised()
     features = pd.read_sql(sql, ENGINE_ADS)
     features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
         level=3).reset_index()
     features = features[['area_code','year','quarter','new_dwelling_start','new_dwelling_complete','homelessness','hpi','sales_volume']]
     features = features.dropna().reset_index(drop = True)
+
     return features
 
 def fill_missing_data():
@@ -197,6 +198,75 @@ def fill_missing_data():
     features = features.dropna().reset_index(drop = True)
 
     return features
+
+def store_population_estimate():
+    """
+    store Population Estimates for UK, England and Wales, Scotland and Northern Ireland.Provided by administrative area, single year of age and sex.
+    :return:
+    """
+    sql = sqlpkg.get_area_code_england()
+    area_code = pd.read_sql(sql, ENGINE_ADS, index_col='area_code')
+    df = pd.read_excel('../data/00259ee8-7e0e-406c-b36a-132cbf4315c9.xlsx',sheet_name = 'Dataset')
+    df = df.dropna()
+    df.columns = df.iloc[0]
+    df = df.rename({'Geography':'area_name','Geography code':'area_code'},axis = 1)
+    df = df.drop(1,axis = 0).reset_index(drop=True)
+    df1 = df[['area_name', 'area_code']]
+    df1 = df1[df1['area_code'].apply(lambda x: x.startswith('S'))]
+    df1 = df1.drop_duplicates().reset_index(drop = True)
+    sql1 = sqlpkg.get_area_code_scotland()
+    area_code1 = pd.read_sql(sql1, ENGINE_ADS)
+    df1.merge(area_code1,on = 'area_name')
+
+    return
+
+def store_households_estimate_england():
+    """
+    store households estimate based on2016
+    A household is defined as
+    one person living alone
+    or a group of people (not necessarily related) living at the same address who share cooking facilities and share a living room or sitting room or dining area.
+    This includes sheltered accommodation units in an establishment where 50% or more have their own kitchens (irrespective of whether there are other communal facilities)
+    and all people living in caravans on any type of site that is their usual residence;
+    this will include anyone who has no other usual residence elsewhere in the UK.
+    :return:
+    """
+    df = pd.read_excel('../data/detailedtablesstage1and2/S1 Households.xlsx',sheet_name='Female')
+    df = df.iloc[5:,0:20].dropna(axis = 1)
+    df.columns = df.columns = df.iloc[0]
+    df = df.drop(5,axis = 0).reset_index(drop = True)
+    df = df.set_index(['CODE','AREA','AGE GROUP','SEX']).stack().reset_index()
+    df.columns = ['area_code','area_name','age_group','category_value','year','value']
+    df['category_name'] = 'sex'
+    df = df.loc[df.year>= 2011]
+    df.year = df.year.apply(lambda x: str(x)[0:4])
+    # df1 = df.groupby(['area_code','area_name','year'])['value'].sum().reset_index()
+    # df1['age_group'] = 'all'
+    # df1['category_name'] = 'total_number'
+    # df1['category_value'] = 'total_number'
+    to_sql('households',ENGINE_ADS,df)
+    # to_sql('households', ENGINE_ADS, df1)
+    return df
+def nomalise_features():
+    """
+    normalise homelessness, new_dwelling, sales_volume, affordable_dwelling_supply
+    2011-2019 annual
+    :return:
+    """
+    # sql1 = sqlpkg.get_features_except_hpi()
+    # sql2 = sqlpkg.get_total_households()
+    # features = pd.read_sql(sql1,ENGINE_ADS,index_col=['area_code','year'])
+    # households = pd.read_sql(sql2, ENGINE_ADS, index_col=['area_code', 'year'])
+    # result = features.join(households).dropna()
+    # result['feature_value_normalised'] = result.feature_value / result.value
+    # result = result.reset_index().drop('value',axis = 1)
+    # to_sql('features',ENGINE_ADS,result)
+    sql = sqlpkg.get_features_hpi()
+    hpi = pd.read_sql(sql,ENGINE_ADS)
+    hpi['feature_value_normalised'] = hpi.feature_value
+    to_sql('features', ENGINE_ADS, hpi)
+    return
+
 if __name__ == '__main__':
-    get_feature_data()
+    nomalise_features()
     #1,17-30
