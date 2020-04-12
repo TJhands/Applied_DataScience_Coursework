@@ -270,6 +270,21 @@ def nomalise_features():
     hpi['feature_value_normalised'] = hpi.feature_value
     to_sql('features', ENGINE_ADS, hpi)
     return
+def knn_fill_missing():
+    features = fill_missing_data()
+    # print(features.describe())
+
+    features = features[
+        ['new_dwelling_start', 'new_dwelling_complete', 'homelessness', 'hpi',
+         'sales_volume']]
+    df = features
+    df = df.replace("NULL", np.nan)
+    print(df)
+    fill_knn = KNN(k=5).fit_transform(df)
+    data = pd.DataFrame(fill_knn)
+    data.columns = ['new_dwelling_start', 'new_dwelling_complete', 'homelessness', 'hpi',
+                    'sales_volume']
+    return (data)
 
 if __name__ == '__main__':
     get_feature_data()
