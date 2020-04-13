@@ -19,15 +19,15 @@
 >>households projection 2011-2019 annual for normalisation
 
 >>new features:
->>>'Households_with_one_dependent_child',
- 'Households_with_three_or_more_dependent_children',
- 'Households_with_two_dependent_children',
- 'One_person_households__Female',
- 'One_person_households__Male',
- 'Other_households_with_two_or_more_adults',
- 'Male',
- 'Female',
- 'age_under29'
+>>>'Households_with_one_dependent_child'
+>>>'Households_with_three_or_more_dependent_children'
+>>>'Households_with_two_dependent_children'
+>>>'One_person_households__Female'
+>>>'One_person_households__Male'
+>>> 'Other_households_with_two_or_more_adults'
+>>>'Male'
+>>>'Female'
+>>>'age_under29
 
 
  draw_multi可以回归
