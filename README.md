@@ -1,6 +1,6 @@
 # Applied_DataScience_Coursework
 
-#**`Data`**:  
+# **`Data`**:  
 >https://www.gov.uk/government/statistical-data-sets/live-tables-on-house-building
 >>permanent dwellings started and completed by three tenures:("PrivateEnterprise","Housing Associations","LocalAuthority"
 ) 2005Q1-2019Q4 quarter
@@ -18,8 +18,8 @@
 >https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/datasets/householdprojectionsforenglanddetaileddataformodellingandanalysis
 >>households projection 2011-2019 annual for normalisation
 
-##new features:
-```txt
+## new features:
+```
 1 Households_with_one_dependent_child
 2 Households_with_three_or_more_dependent_children
 3 Households_with_two_dependent_children
