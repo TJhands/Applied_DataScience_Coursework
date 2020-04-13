@@ -1,11 +1,6 @@
 import pandas as pd
 import numpy as np
-from pandas._config import display
-import db_config
-from tosql import to_sql
-import sqlpkg
-import arrow
-import math
+
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
@@ -24,7 +19,6 @@ print(features.describe())
 # features=features[features["homelessness"]<104.5]
 
 df=features
-df= features[['homelessness','new_dwelling_start','new_dwelling_complete','hpi','sales_volume']]
 # print(features.columns)
 homeless =features["homelessness"]
 coo= df.corrwith(homeless)
@@ -37,7 +31,15 @@ Train,Test = train_test_split(df, train_size = 0.8, random_state=1234)
 #y=homelessness
 #x=sales_volume+hpi
 
-fit = smf.ols('homelessness~sales_volume+hpi+hpi+new_dwelling_start+new_dwelling_complete', data = Train).fit()
+fit = smf.ols('homelessness~Households_with_one_dependent_child+'
+              'Households_with_three_or_more_dependent_children+'
+              'Households_with_two_dependent_children+'
+              'One_person_households__Female+'
+              'One_person_households__Male+'
+              'Other_households_with_two_or_more_adults+'
+              'Male+'
+              'Female+'
+              'age_under29', data = Train).fit()
 print(fit.summary())
 
 

@@ -4,6 +4,7 @@ import db_config
 from tosql import to_sql
 import sqlpkg
 import arrow
+from knnfill import knn_fill_missing
 ENGINE_ADS = db_config.ENGINE_ADS_COURSEWORK
 
 
@@ -168,40 +169,6 @@ def store_total_dwelling_supply():
     result.dropna(subset=['area_code','year','feature_name','quarter'],inplace = True)
     to_sql("features", ENGINE_ADS, result, type="update", chunksize=2000)
     return
-def get_feature_data():
-    """
-    get features and transfer the format to csv (Axial rotation)
-    :return:
-    """
-    sql = sqlpkg.get_features_nomalised()
-    features = pd.read_sql(sql, ENGINE_ADS)
-    features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
-        level=3).reset_index()
-    features = features[['area_code','year','quarter','new_dwelling_start','new_dwelling_complete','homelessness','hpi','sales_volume']]
-    features = features.dropna().reset_index(drop = True)
-    features.new_dwelling_start = features.new_dwelling_start / max(features.new_dwelling_start)
-    features.new_dwelling_complete = features.new_dwelling_complete / max(features.new_dwelling_complete)
-    features.homelessness = features.homelessness / max(features.homelessness)
-    features.hpi = features.hpi / max(features.hpi)
-    features.sales_volume = features.sales_volume / max(features.sales_volume)
-    return features
-
-def fill_missing_data():
-    """
-       get features and transfer the format to csv (Axial rotation)
-       :return:
-       """
-    sql = sqlpkg.get_features()
-    features = pd.read_sql(sql, ENGINE_ADS)
-    features = features.fillna('NULL')
-    features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
-        level=3).reset_index()
-    features = features[
-        ['area_code', 'year', 'quarter', 'new_dwelling_start', 'new_dwelling_complete', 'homelessness', 'hpi',
-         'sales_volume']]
-    features = features.dropna().reset_index(drop = True)
-
-    return features
 
 def store_population_estimate():
     """
@@ -257,34 +224,139 @@ def nomalise_features():
     2011-2019 annual
     :return:
     """
-    # sql1 = sqlpkg.get_features_except_hpi()
-    # sql2 = sqlpkg.get_total_households()
-    # features = pd.read_sql(sql1,ENGINE_ADS,index_col=['area_code','year'])
-    # households = pd.read_sql(sql2, ENGINE_ADS, index_col=['area_code', 'year'])
-    # result = features.join(households).dropna()
-    # result['feature_value_normalised'] = result.feature_value / result.value
-    # result = result.reset_index().drop('value',axis = 1)
-    # to_sql('features',ENGINE_ADS,result)
-    sql = sqlpkg.get_features_hpi()
-    hpi = pd.read_sql(sql,ENGINE_ADS)
-    hpi['feature_value_normalised'] = hpi.feature_value
-    to_sql('features', ENGINE_ADS, hpi)
+    sql1 = sqlpkg.get_features_except_hpi()
+    sql2 = sqlpkg.get_total_households()
+    features = pd.read_sql(sql1,ENGINE_ADS,index_col=['area_code','year'])
+    households = pd.read_sql(sql2, ENGINE_ADS, index_col=['area_code', 'year'])
+    result = features.join(households).dropna()
+    result['feature_value_normalised'] = result.feature_value / result.value
+    result = result.reset_index().drop('value',axis = 1)
+    to_sql('features',ENGINE_ADS,result)
+    # sql = sqlpkg.get_features_hpi()
+    # hpi = pd.read_sql(sql,ENGINE_ADS)
+    # hpi['feature_value_normalised'] = hpi.feature_value
+    # to_sql('features', ENGINE_ADS, hpi)
     return
-def knn_fill_missing():
-    features = fill_missing_data()
-    # print(features.describe())
+# def knn_fill_missing():
+#     features = fill_missing_data()
+#     # print(features.describe())
+#
+#     features = features[
+#         ['new_dwelling_start', 'new_dwelling_complete', 'homelessness', 'hpi',
+#          'sales_volume']]
+#     df = features
+#     df = df.replace("NULL", np.nan)
+#     print(df)
+#     fill_knn = KNN(k=5).fit_transform(df)
+#     data = pd.DataFrame(fill_knn)
+#     data.columns = ['new_dwelling_start', 'new_dwelling_complete', 'homelessness', 'hpi',
+#                     'sales_volume']
+#     return (data)
+def store_household_features():
+    """
+    store features related to household type and sex
+    household type / total households
+    :return:
+    """
+    sql_all = sqlpkg.get_household_by_all()
+    all = pd.read_sql(sql_all,ENGINE_ADS)
+    sql_household_type = sqlpkg.get_household_by_househould_type()
+    # sql_sex = sqlpkg.get_household_by_sex()
+    household = pd.read_sql(sql_household_type,ENGINE_ADS)
+    household = household.groupby(['area_code','year','category_value'])['value'].sum().reset_index()
+    household.category_value = household.category_value.apply(lambda x: x.replace(' ','_') )
+    household.category_value = household.category_value.apply(lambda x: x.replace(':', '_'))
+    result = all.merge(household,on= ['area_code','year'],how = 'left')
+    result['feature_value_normalised'] = result.value_y / result.value_x
+    result['quarter'] = 'Q1'
+    result = result.drop('value_x',axis = 1)
+    result = result.rename({'category_value':'feature_name','value_y':'feature_value'},axis = 1)
+    to_sql('features',ENGINE_ADS,result)
+    return
 
+def store_household_age_features():
+    """
+    store features related to age_group age under 29
+    household type / total households
+    :return:
+    """
+    sql_all = sqlpkg.get_household_by_all()
+    all = pd.read_sql(sql_all,ENGINE_ADS)
+    sql_age = sqlpkg.get_household_by_age()
+    household = pd.read_sql(sql_age,ENGINE_ADS)
+    household = household.groupby(['area_code','year'])['value'].sum().reset_index()
+    result = all.merge(household,on= ['area_code','year'],how = 'left')
+    result['feature_value_normalised'] = result.value_y / result.value_x
+    result['quarter'] = 'Q1'
+    result = result.drop('value_x',axis = 1)
+    result['feature_name'] = 'age_under29'
+    result = result.rename({'value_y':'feature_value'},axis = 1)
+    to_sql('features',ENGINE_ADS,result)
+    return
+
+def get_feature_data_old():
+    """
+    get features and transfer the format to csv (Axial rotation)
+    :return:
+    """
+    sql = sqlpkg.get_features_nomalised()
+    features = pd.read_sql(sql, ENGINE_ADS)
+    features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
+        level=3).reset_index()
+    features = features[['area_code','year','quarter','new_dwelling_start','new_dwelling_complete','homelessness','hpi','sales_volume']]
+    features = features.dropna().reset_index(drop = True)
+    features.new_dwelling_start = features.new_dwelling_start / max(features.new_dwelling_start)
+    features.new_dwelling_complete = features.new_dwelling_complete / max(features.new_dwelling_complete)
+    features.homelessness = features.homelessness / max(features.homelessness)
+    features.hpi = features.hpi / max(features.hpi)
+    features.sales_volume = features.sales_volume / max(features.sales_volume)
+    return features
+
+def get_feature_data():
+    """
+    get features and transfer the format to csv (Axial rotation)
+    :return:
+    """
+    sql = sqlpkg.get_features_nomalised()
+    features = pd.read_sql(sql, ENGINE_ADS)
+    features = features.fillna('NULL')
+    features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
+        level=3).reset_index()
+    features = features[['area_code','year','quarter',
+                         'homelessness',
+                         'Households_with_one_dependent_child',
+                         'Households_with_three_or_more_dependent_children',
+                         'Households_with_two_dependent_children',
+                         'One_person_households__Female',
+                         'One_person_households__Male',
+                         'Other_households_with_two_or_more_adults',
+                         'Male',
+                         'Female',
+                         'age_under29']]
+    features = features.dropna().reset_index(drop = True)
+
+    # fill null value
+    data = knn_fill_missing(features.iloc[:,3:])
+    data.homelessness = data.homelessness / data.homelessness.max()
+    return data
+
+def fill_missing_data():
+    """
+       get features and transfer the format to csv (Axial rotation)
+       :return:
+       """
+    sql = sqlpkg.get_features()
+    features = pd.read_sql(sql, ENGINE_ADS)
+    features = features.fillna('NULL')
+    features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
+        level=3).reset_index()
     features = features[
-        ['new_dwelling_start', 'new_dwelling_complete', 'homelessness', 'hpi',
+        ['area_code', 'year', 'quarter', 'new_dwelling_start', 'new_dwelling_complete', 'homelessness', 'hpi',
          'sales_volume']]
-    df = features
-    df = df.replace("NULL", np.nan)
-    print(df)
-    fill_knn = KNN(k=5).fit_transform(df)
-    data = pd.DataFrame(fill_knn)
-    data.columns = ['new_dwelling_start', 'new_dwelling_complete', 'homelessness', 'hpi',
-                    'sales_volume']
-    return (data)
+    features = features.dropna().reset_index(drop = True)
+
+    return features
+
 
 if __name__ == '__main__':
     get_feature_data()
