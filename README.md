@@ -18,11 +18,11 @@
 >https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/datasets/householdprojectionsforenglanddetaileddataformodellingandanalysis
 >>households projection 2011-2019 annual for normalisation
 
- >https://www.nomisweb.co.uk/query/asv2htm.aspx
->>unemployment rate 2016-2019 annual England Scotland Wales 
-
  >https://www.gov.uk/government/statistics/help-to-buy-equity-loan-scheme-statistics-april-2013-to-30-september-2019-england
 >>help to buy 2014-2019 all quarter England
+
+ >https://www.nomisweb.co.uk/query/asv2htm.aspx
+>>unemployment rate 2016-2019 annual England Scotland Wales 
 
 >>weekly pay change (%) for different group(median)
 >>```
@@ -47,6 +47,14 @@
 7 Male
 8 Female
 9 age_under29
+10 unemployment
+11 male_full_time
+12 male_part_time
+13 female_full_time
+14 female_part_time
+15 full_time
+16 part_time
+17 help_to_buy
 ```
 
 
