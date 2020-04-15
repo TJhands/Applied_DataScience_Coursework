@@ -294,6 +294,28 @@ def store_household_age_features():
     to_sql('features',ENGINE_ADS,result)
     return
 
+def store_unemployment():
+    """
+    store unemployment rate
+    :return:
+    """
+    sql_area = sqlpkg.get_area_code()
+    area = pd.read_sql(sql_area,ENGINE_ADS)
+    area = area[['area_name','area_code']]
+    df = pd.read_excel("../data/nomis_2020_04_15_162626.xlsx").dropna()
+    df = df.drop(["Unnamed: 2","Unnamed: 4","Unnamed: 6","Unnamed: 8"],axis = 1)
+    df.columns = ['area_name','2016','2017','2018','2019']
+    df.replace("-",'None',inplace = True)
+    df.area_name = df.area_name.apply(lambda x:x.split(':')[1])
+    result = area.merge(df, on = 'area_name',how = 'inner' )
+    result = result.drop_duplicates().drop('area_name',axis = 1).reset_index(drop = True)
+    result = result.set_index('area_code').stack().reset_index()
+    result.columns = ['area_code','year','feature_value']
+    result['quarter'] = 'year'
+    result['feature_name'] = 'unemployment'
+    result['feature_value_normalised'] = result.feature_value
+    to_sql('features',ENGINE_ADS,result)
+    return
 def get_feature_data_old():
     """
     get features and transfer the format to csv (Axial rotation)
@@ -339,25 +361,25 @@ def get_feature_data():
     data = knn_fill_missing(features.iloc[:,3:])
     data.homelessness = data.homelessness / data.homelessness.max()
     return data
-
-def fill_missing_data():
+def get_feature_data_scotland():
     """
-       get features and transfer the format to csv (Axial rotation)
-       :return:
-       """
-    sql = sqlpkg.get_features()
+    get features and transfer the format to csv (Axial rotation) scotland
+    :return:
+    """
+    sql = sqlpkg.get_features_nomalised_scotland()
     features = pd.read_sql(sql, ENGINE_ADS)
     features = features.fillna('NULL')
     features = features.groupby(['area_code', 'year', 'quarter', 'feature_name'])['feature_value'].last().unstack(
         level=3).reset_index()
-    features = features[
-        ['area_code', 'year', 'quarter', 'new_dwelling_start', 'new_dwelling_complete', 'homelessness', 'hpi',
-         'sales_volume']]
     features = features.dropna().reset_index(drop = True)
 
-    return features
+    # fill null value
+    # data = knn_fill_missing(features.iloc[:,3:])
+    # data.homelessness = data.homelessness / data.homelessness.max()
+    result = features.iloc[:,3:]
+    return result
 
 
 if __name__ == '__main__':
-    get_feature_data()
+    store_unemployment()
     #1,17-30

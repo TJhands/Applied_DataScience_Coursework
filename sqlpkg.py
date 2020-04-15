@@ -38,3 +38,6 @@ def get_household_by_sex():
 def get_household_by_age():
     sql = "select `area_code`,`year`,`value` from households where area_code like 'E%%' and category_name = 'sex' and (age_group = '16-19' or age_group = '20-24' or age_group = '25-29')"
     return sql
+def get_features_nomalised_scotland():
+    sql = "select `area_code`,`year`,`quarter`,`feature_name`,`feature_value_normalised` as `feature_value` from features where area_code like 'S%%'"
+    return sql
