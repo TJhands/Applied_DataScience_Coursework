@@ -23,8 +23,7 @@
 
  >https://www.nomisweb.co.uk/query/asv2htm.aspx
 >>unemployment rate 2016-2019 annual England Scotland Wales 
-
->>weekly pay change (%) for different group(median)
+weekly pay change (%) for different group(median)
 >>```
 >>variables
 >>1 unemployment
