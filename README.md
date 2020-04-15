@@ -19,7 +19,19 @@
 >>households projection 2011-2019 annual for normalisation
 
  >https://www.nomisweb.co.uk/query/asv2htm.aspx
->>unemployment rate 2016-2019 annual England Scotland Wales
+>>unemployment rate 2016-2019 annual England Scotland Wales 
+
+>>weekly pay change (%) for different group
+>>```
+>>variables
+>>1 unemployment
+>>2 male_full_time
+>>3 male_part_time
+>>4 female_full_time
+>>5 female_part_time
+>>6 full_time
+>>7 part_time
+>>```
 
 ## new features:
 ```

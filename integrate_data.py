@@ -311,11 +311,38 @@ def store_unemployment():
     result = result.drop_duplicates().drop('area_name',axis = 1).reset_index(drop = True)
     result = result.set_index('area_code').stack().reset_index()
     result.columns = ['area_code','year','feature_value']
-    result['quarter'] = 'year'
+    result['quarter'] = 'Q1'
     result['feature_name'] = 'unemployment'
     result['feature_value_normalised'] = result.feature_value
     to_sql('features',ENGINE_ADS,result)
     return
+
+def store_pay_change():
+    """
+    store median weekly pay(basic) change
+    :return:
+    """
+    sql_area = sqlpkg.get_area_code()
+    area = pd.read_sql(sql_area,ENGINE_ADS)
+    area = area[['area_name','area_code']]
+    df = pd.read_excel("../data/nomis_2020_04_15_175347.xlsx").dropna()
+    df = df.drop(["Unnamed: 2","Unnamed: 4","Unnamed: 6","Unnamed: 8", "Unnamed: 10", "Unnamed: 12"],axis = 1)
+    df.columns = ['area_name','male_full_time','male_part_time','female_full_time','female_part_time','full_time','part_time']
+    df.replace(["-",'!'],'None',inplace = True)
+    df.area_name = df.area_name.apply(lambda x:x.split(':')[1])
+    result = area.merge(df, on = 'area_name',how = 'inner')
+    result = result.drop_duplicates().drop('area_name',axis = 1).reset_index(drop = True)
+    result = result.set_index('area_code').stack().reset_index()
+    result.columns = ['area_code','feature_name','feature_value']
+    result.feature_value = result.feature_value.apply(lambda x:x / 100 if not isinstance(x,str) else x)
+    result['quarter'] = 'Q1'
+    result['year'] = '2019'
+    result['feature_value_normalised'] = result.feature_value
+    to_sql('features',ENGINE_ADS,result)
+    result.quarter = 'year'
+    to_sql('features', ENGINE_ADS, result)
+    return
+
 def get_feature_data_old():
     """
     get features and transfer the format to csv (Axial rotation)
@@ -354,12 +381,14 @@ def get_feature_data():
                          'Other_households_with_two_or_more_adults',
                          'Male',
                          'Female',
-                         'age_under29']]
+                         'age_under29',
+                         'unemployment']]
     features = features.dropna().reset_index(drop = True)
 
     # fill null value
     data = knn_fill_missing(features.iloc[:,3:])
     data.homelessness = data.homelessness / data.homelessness.max()
+    data.unemployment = data.unemployment / 100
     return data
 def get_feature_data_scotland():
     """
@@ -381,5 +410,5 @@ def get_feature_data_scotland():
 
 
 if __name__ == '__main__':
-    store_unemployment()
+    store_pay_change()
     #1,17-30
