@@ -22,7 +22,7 @@
 >>help to buy 2014-2019 all quarter England
 
  >https://www.nomisweb.co.uk/query/asv2htm.aspx
->>unemployment rate 2016-2019 annual England Scotland Wales 
+>>unemployment rate 2016-2019 annual England Scotland Wales
 weekly pay change (%) for different group(median)
 >>```
 >>variables
