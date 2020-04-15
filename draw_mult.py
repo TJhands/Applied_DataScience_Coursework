@@ -47,7 +47,7 @@ fit = smf.ols('homelessness~Households_with_one_dependent_child+'
               'female_part_time+'
               'full_time+'
               'part_time+'
-              'help_to_buy+'
+              'help_to_buy'
               , data = Train).fit()
 print(fit.summary())
 
