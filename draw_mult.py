@@ -39,7 +39,16 @@ fit = smf.ols('homelessness~Households_with_one_dependent_child+'
               'Other_households_with_two_or_more_adults+'
               'Male+'
               'Female+'
-              'age_under29', data = Train).fit()
+              'age_under29+'
+              'unemployment+'
+              'male_full_time+'
+              'male_part_time+'
+              'female_full_time+'
+              'female_part_time+'
+              'full_time+'
+              'part_time+'
+              'help_to_buy+'
+              , data = Train).fit()
 print(fit.summary())
 
 
@@ -48,7 +57,7 @@ print(fit.summary())
 # plt.show()
 
 # sns.pairplot(df)
-#plt.show()
+# plt.show()
 
 cm = np.corrcoef(df.values.T)
 sns.set(font_scale=1.5)

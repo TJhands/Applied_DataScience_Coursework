@@ -5,6 +5,7 @@ from tosql import to_sql
 import sqlpkg
 import arrow
 from knnfill import knn_fill_missing
+import re
 ENGINE_ADS = db_config.ENGINE_ADS_COURSEWORK
 
 
@@ -382,13 +383,21 @@ def get_feature_data():
                          'Male',
                          'Female',
                          'age_under29',
-                         'unemployment']]
+                         'unemployment',
+                         'male_full_time',
+                         'male_part_time',
+                         'female_full_time',
+                         'female_part_time',
+                         'full_time',
+                         'part_time',
+                         'help_to_buy']]
     features = features.dropna().reset_index(drop = True)
 
     # fill null value
     data = knn_fill_missing(features.iloc[:,3:])
     data.homelessness = data.homelessness / data.homelessness.max()
     data.unemployment = data.unemployment / 100
+    data.help_to_buy = data.help_to_buy / data.help_to_buy.max()
     return data
 def get_feature_data_scotland():
     """
@@ -410,5 +419,5 @@ def get_feature_data_scotland():
 
 
 if __name__ == '__main__':
-    store_pay_change()
+    get_feature_data()
     #1,17-30
