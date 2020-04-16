@@ -19,7 +19,8 @@
 >>households projection 2011-2019 annual for normalisation
 
  >https://www.gov.uk/government/statistics/help-to-buy-equity-loan-scheme-statistics-april-2013-to-30-september-2019-england
->>help to buy 2014-2019 all quarter England
+>>help to buy 2014(Q1)-2019(Q3) all quarter England; it shows the complete number of sales of help to buy for the first-time buyer, by the local authority. 
+The normalization part: Used the number of sales of help to buy divided the number of local households.
 
  >https://www.nomisweb.co.uk/query/asv2htm.aspx
 >>unemployment rate 2016-2019 annual England Scotland Wales
@@ -37,9 +38,8 @@
 >>7 part_time
 >>```
 
-## total features:
+## new features:
 ```
-0 homelessness   normalised and /max
 1 Households_with_one_dependent_child
 2 Households_with_three_or_more_dependent_children
 3 Households_with_two_dependent_children
@@ -56,17 +56,7 @@
 14 female_part_time
 15 full_time
 16 part_time
-17 help_to_buy  normalised and /max
-18 hpi  normalised and /max
-19 sales volume  normalised and /max
-20 new dwelling start  normalised and /max
-21 new dwelling complete  normalised and /max
-PS:  
-features 1-6 are percentages of household type
-features 7-9 are based on the age and gender of the household reference person, (percentage of) 
-feature 10 is unemployment rate
-features 11- 16 are weekly pay change(%) based on different type of work and different gender
-features 17-21 are primary features
+17 help_to_buy
 ```
 
 
