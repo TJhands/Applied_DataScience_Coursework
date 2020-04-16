@@ -97,26 +97,6 @@ sns.pairplot(rdf3)
 # plt.show()
 
 
-# 真实值与预测值的关系# 设置绘图风格
-plt.style.use('ggplot')
-# 设置中文编码和负号的正常显示
-plt.rcParams['font.sans-serif'] = 'Microsoft YaHei'
-
-# 散点图plt.scatter(Test.sales, pred, label = '观测点')
-# 回归线
-plt.plot([Test.sales.min(), Test.sales.max()], [pred.min(), pred.max()], 'r--', lw=2, label = '拟合线')
-
-# 添加轴标签和标题
-plt.title('真实值VS.预测值')
-plt.xlabel('真实值')
-plt.ylabel('预测值')
-
-# 去除图边框的顶部刻度和右边刻度
-plt.tick_params(top = 'off', right = 'off')
-# 添加图例
-plt.legend(loc = 'upper left')
-# 图形展现
-plt.show()
 
 
 cm = np.corrcoef(ndf.values.T)

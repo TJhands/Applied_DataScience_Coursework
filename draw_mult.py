@@ -31,28 +31,38 @@ Train,Test = train_test_split(df, train_size = 0.8, random_state=1234)
 #y=homelessness
 #x=sales_volume+hpi
 
+# fit = smf.ols('homelessness~'
+#               'hpi+'
+#               'sales_volume+'
+#               'new_dwelling_start+'
+#               'new_dwelling_complete+'
+#               'Households_with_one_dependent_child+'
+#               'Households_with_three_or_more_dependent_children+'
+#               'Households_with_two_dependent_children+'
+#               'One_person_households__Female+'
+#               'One_person_households__Male+'
+#               'Other_households_with_two_or_more_adults+'
+#               'Male+'
+#               'Female+'
+#               'age_under29+'
+#               'unemployment+'
+#               'male_full_time+'
+#               'male_part_time+'
+#               'female_full_time+'
+#               'female_part_time+'
+#               'full_time+'
+#               'part_time+'
+#               'help_to_buy'
+#               , data = Train).fit()
 fit = smf.ols('homelessness~'
               'hpi+'
-              'sales_volume+'
-              'new_dwelling_start+'
-              'new_dwelling_complete+'
               'Households_with_one_dependent_child+'
               'Households_with_three_or_more_dependent_children+'
-              'Households_with_two_dependent_children+'
-              'One_person_households__Female+'
               'One_person_households__Male+'
               'Other_households_with_two_or_more_adults+'
               'Male+'
-              'Female+'
               'age_under29+'
-              'unemployment+'
-              'male_full_time+'
-              'male_part_time+'
-              'female_full_time+'
-              'female_part_time+'
-              'full_time+'
-              'part_time+'
-              'help_to_buy'
+              'unemployment'
               , data = Train).fit()
 print(fit.summary())
 
@@ -80,16 +90,4 @@ plt.show()
 
 # sns.pairplot(df)
 # plt.show()
-
-cm = np.corrcoef(df.values.T)
-sns.set(font_scale=1.5)
-hm = sns.heatmap(cm,
-                 cbar=True,
-                 annot=True,
-                 square=True,
-                 fmt='.2f',
-                 annot_kws={'size':15},
-                 yticklabels=['hl','nds','ndc','hpi','sv'],
-                 xticklabels=['hl','nds','ndc','hpi','sv'])
-plt.show()
 
