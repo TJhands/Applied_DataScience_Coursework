@@ -56,7 +56,24 @@ fit = smf.ols('homelessness~'
               , data = Train).fit()
 print(fit.summary())
 
+pred = fit.predict(exog = Test)
+RMSE = np.sqrt(mean_squared_error(Test.homelessness, pred))
 
+# 真实值与预测值的关系# 设置绘图风格
+plt.scatter(Test.homelessness, pred)
+# 回归线
+# plt.plot([Test.homelessness.min(), Test.homelessness.max()], [pred.min(), pred.max()], 'r--', lw=2, label = '拟合线')
+# 添加轴标签和标题
+plt.title('True value VS. Predicted Value')
+plt.xlabel('True Value')
+plt.ylabel('Predictive Value')
+
+# 去除图边框的顶部刻度和右边刻度
+plt.tick_params(top = 'off', right = 'off')
+# # 添加图例
+# 图形展现
+plt.savefig('./result.png')
+plt.show()
 # x=features["homelessness"]
 # h=x.hist(bins=100)
 # plt.show()
