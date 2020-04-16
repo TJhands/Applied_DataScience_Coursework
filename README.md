@@ -37,8 +37,9 @@
 >>7 part_time
 >>```
 
-## new features:
+## total features:
 ```
+0 homelessness   normalised and /max
 1 Households_with_one_dependent_child
 2 Households_with_three_or_more_dependent_children
 3 Households_with_two_dependent_children
@@ -55,7 +56,17 @@
 14 female_part_time
 15 full_time
 16 part_time
-17 help_to_buy
+17 help_to_buy  normalised and /max
+18 hpi  normalised and /max
+19 sales volume  normalised and /max
+20 new dwelling start  normalised and /max
+21 new dwelling complete  normalised and /max
+PS:  
+features 1-6 are percentages of household type
+features 7-9 are based on the age and gender of the household reference person, (percentage of) 
+feature 10 is unemployment rate
+features 11- 16 are weekly pay change(%) based on different type of work and different gender
+features 17-21 are primary features
 ```
 
 
