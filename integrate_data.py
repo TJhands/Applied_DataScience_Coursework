@@ -225,7 +225,7 @@ def nomalise_features():
     2011-2019 annual
     :return:
     """
-    sql1 = sqlpkg.get_features_except_hpi()
+    sql1 = sqlpkg.get_features_help_to_buy()
     sql2 = sqlpkg.get_total_households()
     features = pd.read_sql(sql1,ENGINE_ADS,index_col=['area_code','year'])
     households = pd.read_sql(sql2, ENGINE_ADS, index_col=['area_code', 'year'])
@@ -427,5 +427,5 @@ def get_feature_data_scotland():
 
 
 if __name__ == '__main__':
-    get_feature_data()
+    nomalise_features()
     #1,17-30

@@ -26,6 +26,9 @@ def get_total_households():
 def get_features_hpi():
     sql = "select `area_code`,`year`,`quarter`,`feature_name`,`feature_value` from features where area_code like 'E%%' and feature_name = 'hpi' and `year`>= 2011"
     return sql
+def get_features_help_to_buy():
+    sql = "select `area_code`,`year`,`quarter`,`feature_name`,`feature_value` from features where area_code like 'E%%' and feature_name = 'help_to_buy' and `year`>= 2011"
+    return sql
 def get_household_by_househould_type():
     sql = "select `area_code`,`year`,`category_value`,`value` from households where area_code like 'E%%' and category_name = 'household_type'"
     return sql
