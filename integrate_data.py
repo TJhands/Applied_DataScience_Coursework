@@ -374,6 +374,10 @@ def get_feature_data():
         level=3).reset_index()
     features = features[['area_code','year','quarter',
                          'homelessness',
+                         'hpi',
+                         'sales_volume',
+                         'new_dwelling_start',
+                         'new_dwelling_complete',
                          'Households_with_one_dependent_child',
                          'Households_with_three_or_more_dependent_children',
                          'Households_with_two_dependent_children',
@@ -396,6 +400,10 @@ def get_feature_data():
     # fill null value
     data = knn_fill_missing(features.iloc[:,3:])
     data.homelessness = data.homelessness / data.homelessness.max()
+    data.hpi = data.hpi / data.hpi.max()
+    data.new_dwelling_start = data.new_dwelling_start / data.new_dwelling_start.max()
+    data.new_dwelling_complete = data.new_dwelling_complete / data.new_dwelling_complete.max()
+    data.sales_volume = data.sales_volume / data.sales_volume.max()
     data.unemployment = data.unemployment / 100
     data.help_to_buy = data.help_to_buy / data.help_to_buy.max()
     return data

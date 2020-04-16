@@ -31,7 +31,12 @@ Train,Test = train_test_split(df, train_size = 0.8, random_state=1234)
 #y=homelessness
 #x=sales_volume+hpi
 
-fit = smf.ols('homelessness~Households_with_one_dependent_child+'
+fit = smf.ols('homelessness~'
+              'hpi+'
+              'sales_volume+'
+              'new_dwelling_start+'
+              'new_dwelling_complete+'
+              'Households_with_one_dependent_child+'
               'Households_with_three_or_more_dependent_children+'
               'Households_with_two_dependent_children+'
               'One_person_households__Female+'
