@@ -62,7 +62,7 @@ Train,Test = train_test_split(df, train_size = 0.8, random_state=1234)
 #               'unemployment'
 #               , data = Train).fit()
 fit = smf.ols('homelessness~'
-              'hpi'
+              'Households_with_three_or_more_dependent_children'
               , data = Train).fit()
 print(fit.summary())
 

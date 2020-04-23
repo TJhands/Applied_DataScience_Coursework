@@ -80,11 +80,11 @@ rdf1=df[['homelessness',
 
 
         ]]
-rdf1.columns = ['homelessness','h1c','h3c','h2a']
-sns.set(font_scale=1.8)
-sns.pairplot(rdf1)
-
-plt.show()
+# rdf1.columns = ['homelessness','h1c','h3c','h2a']
+# sns.set(font_scale=1.8)
+# sns.pairplot(rdf1)
+#
+# plt.show()
 
 rdf2=df[['homelessness','hpi',
                          'unemployment'
@@ -103,6 +103,13 @@ rdf3=df[['homelessness',
 # plt.show()
 
 
+rdf4=df[['homelessness','One_person_households__Male',
+                         'Male',
+        ]]
+rdf4.columns =['homelessness','1hm','Male']
+sns.set(font_scale=2)
+sns.pairplot(rdf4)
+plt.show()
 
 
 cm = np.corrcoef(ndf.values.T)
@@ -115,5 +122,5 @@ hm = sns.heatmap(cm,
                  annot_kws={'size':12},
                  yticklabels=['hl','hpi','h1c','h3c','1hm','h2a','Male','a29','ur'],
                  xticklabels=['hl','hpi','h1c','h3c','1hm','h2a','Male','a29','ur'])
-plt.show()
+# plt.show()
 
