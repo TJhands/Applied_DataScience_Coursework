@@ -427,5 +427,5 @@ def get_feature_data_scotland():
 
 
 if __name__ == '__main__':
-    nomalise_features()
+    get_feature_data()
     #1,17-30
