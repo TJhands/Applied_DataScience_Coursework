@@ -54,15 +54,15 @@ Train,Test = train_test_split(df, train_size = 0.8, random_state=1234)
 #               'part_time+'
 #               'help_to_buy'
 #               , data = Train).fit()
+# fit = smf.ols('homelessness~'
+#               'hpi+'
+#               'Households_with_three_or_more_dependent_children+'
+#               'Male+'
+#               'age_under29+'
+#               'unemployment'
+#               , data = Train).fit()
 fit = smf.ols('homelessness~'
-              'hpi+'
-              'Households_with_one_dependent_child+'
-              'Households_with_three_or_more_dependent_children+'
-              'One_person_households__Male+'
-              'Other_households_with_two_or_more_adults+'
-              'Male+'
-              'age_under29+'
-              'unemployment'
+              'hpi'
               , data = Train).fit()
 print(fit.summary())
 
@@ -74,9 +74,9 @@ plt.scatter(Test.homelessness, pred)
 # 回归线
 # plt.plot([Test.homelessness.min(), Test.homelessness.max()], [pred.min(), pred.max()], 'r--', lw=2, label = '拟合线')
 # 添加轴标签和标题
-plt.title('True value VS. Predicted Value')
-plt.xlabel('True Value')
-plt.ylabel('Predictive Value')
+plt.title('True value VS. Predicted Value',fontsize=20)
+plt.xlabel('True Value',fontsize=18)
+plt.ylabel('Predictive Value',fontsize=18)
 
 # 去除图边框的顶部刻度和右边刻度
 plt.tick_params(top = 'off', right = 'off')

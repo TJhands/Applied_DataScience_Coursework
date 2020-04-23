@@ -77,37 +77,43 @@ rdf1=df[['homelessness',
                          'Households_with_three_or_more_dependent_children',
                          'Other_households_with_two_or_more_adults',
 
+
+
         ]]
-rdf1.columns = ['homelessness','h1c','h2c','h2a']
+rdf1.columns = ['homelessness','h1c','h3c','h2a']
+sns.set(font_scale=1.8)
 sns.pairplot(rdf1)
+
 plt.show()
 
 rdf2=df[['homelessness','hpi',
                          'unemployment'
         ]]
-sns.pairplot(rdf2)
-# plt.show()
+# sns.set(font_scale=2)
+# sns.pairplot(rdf2)
+
+#plt.show()
 
 rdf3=df[['homelessness',
-                         'Male',
+                        'unemployment',
                          'age_under29'
         ]]
-
-sns.pairplot(rdf3)
+# sns.set(font_scale=2)
+# sns.pairplot(rdf3)
 # plt.show()
 
 
 
 
 cm = np.corrcoef(ndf.values.T)
-sns.set(font_scale=1.5)
+sns.set(font_scale=2)
 hm = sns.heatmap(cm,
                  cbar=True,
                  annot=True,
                  square=True,
                  fmt='.2f',
                  annot_kws={'size':12},
-                 yticklabels=['hl','hpi','h1c','h2c','1hm','h2a','Male','a29','ur'],
-                 xticklabels=['hl','hpi','h1c','h2c','1hm','h2a','Male','a29','ur'])
-# plt.show()
+                 yticklabels=['hl','hpi','h1c','h3c','1hm','h2a','Male','a29','ur'],
+                 xticklabels=['hl','hpi','h1c','h3c','1hm','h2a','Male','a29','ur'])
+plt.show()
 
