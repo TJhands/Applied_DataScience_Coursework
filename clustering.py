@@ -27,7 +27,6 @@ def cluster(docvectors):
 
 def show_data():
     df = get_feature_data()
-    df = df[['homelessness', 'new_dwelling_start', 'new_dwelling_complete', 'hpi', 'sales_volume']]
     vector = df.values
     # labels = cluster(vector)
     # data['label'] = labels
