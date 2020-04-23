@@ -48,7 +48,7 @@ def show_data():
     d6 = result[df['label'] == 5]
     d7 = result[df['label'] == 6]
     d8 = result[df['label'] == 7]
-    plt.plot(d1[0], d1[1], 'r.', d2[0], d2[1], 'go', d3[0], d3[1], 'b*',d4[0],d4[1],'y',
+    plt.plot(d1[0], d1[1], 'r.', d2[0], d2[1], 'g', d3[0], d3[1], 'b',d4[0],d4[1],'y',
              d5[0], d5[1], 'c', d6[0], d6[1], 'm', d7[0], d7[1], 'black',d8[0],d8[1],'pink')
     plt.show()
 if __name__ == '__main__':
