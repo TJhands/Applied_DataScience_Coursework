@@ -6,7 +6,7 @@ import sqlpkg
 import arrow
 from knnfill import knn_fill_missing
 import re
-from setting import ENGINE_ADS
+from db_config import ENGINE_ADS
 
 
 
