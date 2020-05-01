@@ -51,8 +51,30 @@ def show_data():
     plt.plot(d1[0], d1[1], 'r.', d2[0], d2[1], 'g', d3[0], d3[1], 'b',d4[0],d4[1],'y',
              d5[0], d5[1], 'c', d6[0], d6[1], 'm', d7[0], d7[1], 'black',d8[0],d8[1],'pink')
     plt.show()
+def pair_plot():
+    df = get_feature_data()
+    df = df[['homelessness','hpi']]
+    vector = df.values
+    # labels = cluster(vector)
+    # data['label'] = labels
+    labels_ = xmeansCluster(vector)
+    label = pd.DataFrame(labels_).stack().reset_index(level=1, drop=True).rename('A').to_frame()
+    label['label'] = label.index
+    label.sort_values(by='A', inplace=True)
+    label.set_index('A', inplace=True)
+    df_ = df.join(label)
+    tsne = TSNE()
+    # a = tsne.fit_transform(vector)
+    # # a = np.load("tsne_doc2vec_exetools_post.npy",allow_pickle=True)
+    # result = pd.DataFrame(a)
+    df.columns = [0,1]
+    d1 = df[df_['label'] == 0]
+    d2 = df[df_['label'] == 1]
+    d3 = df[df_['label'] == 2]
+    plt.plot(d1[0], d1[1], 'r.', d2[0], d2[1], 'g', d3[0], d3[1], 'b')
+    plt.show()
 if __name__ == '__main__':
     # data = get_feature_data()
     # data = data[['homelessness','new_dwelling_start','new_dwelling_complete','hpi','sales_volume']]
     # xmeansCluster(data.values)
-    show_data()
+    pair_plot()
