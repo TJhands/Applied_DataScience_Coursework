@@ -425,7 +425,12 @@ def get_feature_data_scotland():
     result = features.iloc[:,3:]
     return result
 
-
+def get_feature_data_labeled():
+    df = get_feature_data()
+    df.homelessness = df.homelessness.apply(lambda x: 0 if x <0.2 else x)
+    df.homelessness = df.homelessness.apply(lambda x: 1 if x >= 0.2 and x < 0.4 else x)
+    df.homelessness = df.homelessness.apply(lambda x: 2 if x >=0.4 and x < 1 else x)
+    return df
 if __name__ == '__main__':
-    get_feature_data()
+    get_feature_data_labeled()
     #1,17-30
